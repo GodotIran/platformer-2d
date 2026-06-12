@@ -21,4 +21,4 @@ jobs:
           retries: 2
           warnings-as-errors: true
           arguments: '--verbose'
-          publish-report: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository }}
+          publish-report: false
