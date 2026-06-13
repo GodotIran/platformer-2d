@@ -52,6 +52,16 @@
 
 ### پیش‌نیازها
 - [Godot 4](https://godotengine.org/download/) نصب باشه
+- [Gdscript Formatter](https://github.com/GDQuest/GDScript-formatter)
+ <details>
+<summary><b>نصب سریع GDScript Formatter</b></summary>
+<p>وارد تب Script بشید</p>
+<p>منوی Format رو باز کنید</p>
+<p>گزینه Install or Update Formatter را بزنید</p>
+<p>منتظر بمانید تا نصب کامل شود</p>
+</details>
+  
+  
 - یک اکانت GitHub
 
 ### اجرای پروژه
