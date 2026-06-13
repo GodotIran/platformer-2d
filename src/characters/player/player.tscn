@@ -1,0 +1,34 @@
+[gd_scene format=3 uid="uid://b07iimslwcwbv"]
+
+[ext_resource type="Script" uid="uid://du4pfg7wh0pg8" path="res://src/characters/player/player.gd" id="1_5c1al"]
+[ext_resource type="Script" uid="uid://ddco1i3ke8y8o" path="res://src/characters/player/state_machine.gd" id="2_7nd6e"]
+[ext_resource type="Script" uid="uid://dba0pkih46m2p" path="res://src/characters/player/input_source.gd" id="3_5c1al"]
+
+[sub_resource type="Gradient" id="Gradient_rxibo"]
+colors = PackedColorArray(1, 0, 0, 1, 0, 0, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_ah7td"]
+gradient = SubResource("Gradient_rxibo")
+fill_to = Vector2(1, 1)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ah7td"]
+size = Vector2(64, 64)
+
+[node name="Player" type="CharacterBody2D" unique_id=1471882381 node_paths=PackedStringArray("input_source")]
+script = ExtResource("1_5c1al")
+input_source = NodePath("PlayerInputSource")
+metadata/_custom_type_script = "uid://du4pfg7wh0pg8"
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1248251674]
+texture = SubResource("GradientTexture2D_ah7td")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1373724743]
+shape = SubResource("RectangleShape2D_ah7td")
+
+[node name="StateMachine" type="Node" parent="." unique_id=1567188096]
+script = ExtResource("2_7nd6e")
+metadata/_custom_type_script = "uid://bj6kd47wxuojm"
+
+[node name="PlayerInputSource" type="Node" parent="." unique_id=271598865]
+script = ExtResource("3_5c1al")
+metadata/_custom_type_script = "uid://dba0pkih46m2p"
