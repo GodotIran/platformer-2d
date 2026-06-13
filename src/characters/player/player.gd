@@ -13,7 +13,7 @@ var input_data: PlayerInputData
 func _physics_process(delta: float) -> void:
 	update_input_data()
 
-	super(delta)
+	super._physics_process(delta)
 
 	if is_on_floor():
 		jump_count = 0
