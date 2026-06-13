@@ -10,6 +10,7 @@ func before_test() -> void:
 	player.input_source = mock_input
 	add_child(player)
 	player.update_input_data()
+	player.gravity = Vector2(0, 980) # get_gravity only work on a real scene
 
 
 func after_test() -> void:

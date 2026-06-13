@@ -10,13 +10,9 @@ var player: Player:
 
 func _notification(what: int) -> void:
 	match what:
-		StateMachine.BaseState.NOTIFICATION_ENTER:
-			player.start_fall_visuals()
 		StateMachine.BaseState.NOTIFICATION_PHYSICS_PROCESS:
 			player.update_movement()
 			player.update_jump()
-		StateMachine.BaseState.NOTIFICATION_EXIT:
-			player.stop_fall_visuals()
 
 
 func _priority() -> int:

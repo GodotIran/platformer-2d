@@ -40,42 +40,6 @@ func update_jump() -> void:
 	velocity.y = -jump_force
 
 
-#region Visual methods
-# this methods call from state while enter or exit state
-# use this methods for start of stop animations, audios or any visuals
-func start_idle_visuals() -> void:
-	pass
-
-
-func stop_idle_visuals() -> void:
-	pass
-
-
-func start_walk_visuals() -> void:
-	pass
-
-
-func stop_walk_visuals() -> void:
-	pass
-
-
-func start_jump_visuals() -> void:
-	pass
-
-
-func stop_jump_visuals() -> void:
-	pass
-
-
-func start_fall_visuals() -> void:
-	pass
-
-
-func stop_fall_visuals() -> void:
-	pass
-#endregion
-
-
 func update_input_data() -> void:
 	if not input_source:
 		push_error("Player input_source is null")
