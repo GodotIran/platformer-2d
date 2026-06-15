@@ -20,7 +20,7 @@ jobs:
           mkdir -p "$HOME/.local/bin"
           echo "$HOME/.local/bin" >> $GITHUB_PATH
 
-          LATEST_URL=$(curl -s https://api.github.com/repos/gdquest/gdscript-formatter/releases/latest | grep -oP '"browser_download_url": "\K[^"]*linux-x86_64[^"]*' | head -1)
+          LATEST_URL=$(curl -s https://api.github.com/repos/gdquest/gdscript-formatter/releases/latest | jq -r '.assets[] | select(.name | test("linux.*x86_64")) | .browser_download_url' | head -1)
           curl -L -o gdscript-formatter.zip "$LATEST_URL"
           unzip -o gdscript-formatter.zip
           mv gdscript-formatter-* gdscript-formatter
