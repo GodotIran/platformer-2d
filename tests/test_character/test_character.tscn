@@ -1,0 +1,54 @@
+[gd_scene format=4 uid="uid://div4ftrpyv232"]
+
+[ext_resource type="TileSet" uid="uid://0sy4m6qiamx6" path="res://test_utils/prototype/test_tile_set.tres" id="1_t5xmy"]
+[ext_resource type="Script" uid="uid://b5viylk3421ub" path="res://character/character.gd" id="2_1de2q"]
+[ext_resource type="Texture2D" uid="uid://cg5b6vs548edx" path="res://test_utils/prototype/classic/tiles/coin_logo.png" id="3_50n7o"]
+[ext_resource type="Script" uid="uid://debh70pd04xch" path="res://core/player_controller/player_controller.gd" id="4_i364g"]
+[ext_resource type="PackedScene" uid="uid://16fla8fybe3n" path="res://test_utils/test_action_area/test_action_area.tscn" id="5_1de2q"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_p4wf5"]
+radius = 48.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_p4wf5"]
+size = Vector2(150, 150)
+
+[node name="TestCharacter" type="Node2D" unique_id=1648259906]
+
+[node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=1383378999]
+tile_map_data = PackedByteArray("AAD//wUAAQAEAAAAAAAAAAUAAQAEAAAAAAABAAUAAQAEAAAAAAACAAUAAQAEAAAAAAADAAUAAQAEAAAAAAAEAAUAAQAEAAAAAAAFAAUAAQAEAAAAAAAGAAUAAQAEAAAAAAAHAAUAAQAEAAAAAAAIAAUAAQAEAAAAAAAJAAUAAQAEAAAAAAAKAAUAAQAEAAAAAAACAAQAAQAEAAAAAAABAAQAAQAEAAAAAAAAAAQAAQAEAAAAAAD//wQAAQAEAAAAAAAHAAQAAQAEAAAAAAAIAAQAAQAEAAAAAAAJAAQAAQAEAAAAAAAKAAQAAQAEAAAAAAA=")
+tile_set = ExtResource("1_t5xmy")
+
+[node name="Character" type="CharacterBody2D" parent="." unique_id=485820142]
+position = Vector2(672, 48)
+script = ExtResource("2_1de2q")
+metadata/_custom_type_script = "uid://b5viylk3421ub"
+
+[node name="Sprite2D" type="Sprite2D" parent="Character" unique_id=1332812585]
+texture = ExtResource("3_50n7o")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Character" unique_id=962361301]
+shape = SubResource("CircleShape2D_p4wf5")
+
+[node name="PlayerController" type="Node" parent="." unique_id=86879525 node_paths=PackedStringArray("character")]
+script = ExtResource("4_i364g")
+character = NodePath("../Character")
+metadata/_custom_type_script = "uid://debh70pd04xch"
+
+[node name="TestActionArea" parent="." unique_id=624487239 node_paths=PackedStringArray("target") instance=ExtResource("5_1de2q")]
+position = Vector2(672, 576)
+target = NodePath("../Character")
+release = true
+press_duration = 2.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TestActionArea" unique_id=1571095293]
+shape = SubResource("RectangleShape2D_p4wf5")
+
+[node name="TestActionArea3" parent="." unique_id=457742406 node_paths=PackedStringArray("target") instance=ExtResource("5_1de2q")]
+position = Vector2(384, 576)
+action = 2
+target = NodePath("../Character")
+release = true
+press_duration = 0.1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TestActionArea3" unique_id=792493246]
+shape = SubResource("RectangleShape2D_p4wf5")

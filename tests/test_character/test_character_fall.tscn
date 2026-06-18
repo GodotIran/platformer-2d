@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://cammaal3yklai"]
+
+[ext_resource type="Script" uid="uid://b5viylk3421ub" path="res://character/character.gd" id="1_b30j8"]
+[ext_resource type="Texture2D" uid="uid://cg5b6vs548edx" path="res://test_utils/prototype/classic/tiles/coin_logo.png" id="2_52xcj"]
+[ext_resource type="Script" uid="uid://debh70pd04xch" path="res://core/player_controller/player_controller.gd" id="3_w2lpp"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_p4wf5"]
+radius = 48.0
+
+[node name="TestCharacterFall" type="Node2D" unique_id=141353178]
+
+[node name="Character" type="CharacterBody2D" parent="." unique_id=485820142]
+position = Vector2(624, 48)
+script = ExtResource("1_b30j8")
+metadata/_custom_type_script = "uid://b5viylk3421ub"
+
+[node name="Sprite2D" type="Sprite2D" parent="Character" unique_id=1332812585]
+texture = ExtResource("2_52xcj")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Character" unique_id=962361301]
+shape = SubResource("CircleShape2D_p4wf5")
+
+[node name="PlayerController" type="Node" parent="." unique_id=86879525 node_paths=PackedStringArray("character")]
+script = ExtResource("3_w2lpp")
+character = NodePath("../Character")
+metadata/_custom_type_script = "uid://debh70pd04xch"
