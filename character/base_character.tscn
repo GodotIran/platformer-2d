@@ -1,17 +1,17 @@
 [gd_scene format=3 uid="uid://cxgm2gt3gk1ao"]
 
-[ext_resource type="Script" uid="uid://b5viylk3421ub" path="res://character/character.gd" id="1_xdxtq"]
-[ext_resource type="Texture2D" uid="uid://cg5b6vs548edx" path="res://test_utils/prototype/classic/tiles/coin_logo.png" id="2_qt5ce"]
+[ext_resource type="Script" uid="uid://b5viylk3421ub" path="res://character/character.gd" id="1_q7flm"]
+[ext_resource type="Texture2D" uid="uid://cg5b6vs548edx" path="res://test_utils/prototype/classic/tiles/coin_logo.png" id="2_na6e1"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_77ofe"]
 radius = 48.0
 
-[node name="MainCharacter" type="CharacterBody2D" unique_id=1304265545]
-script = ExtResource("1_xdxtq")
+[node name="BaseCharacter" type="CharacterBody2D" unique_id=1304265545]
+script = ExtResource("1_q7flm")
 metadata/_custom_type_script = "uid://b5viylk3421ub"
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1642814827]
-texture = ExtResource("2_qt5ce")
+texture = ExtResource("2_na6e1")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1129519021]
 shape = SubResource("CircleShape2D_77ofe")
