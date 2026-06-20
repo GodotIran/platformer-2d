@@ -41,7 +41,7 @@ func apply_movement() -> void:
 	)
 	var gravity_component := velocity.project(gravity_direction)
 	velocity = gravity_component + movement_vector
-	_is_hit()
+	_is_tile_hit()
 
 func apply_jump_force() -> void:
 	velocity = (
