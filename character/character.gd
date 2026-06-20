@@ -100,14 +100,12 @@ func take_damage(amount: int) -> void:
 	if health < 0:
 		health = 0
 
-	print("Health: ", health)
 
 func heal(amount: int) -> void:
 	health += amount
-	# Cap health at max (you can add a max_health variable)
+	# Note: Cap health at max (you can add a max_health variable)
 	if health > 100:
 		health = 100
-	print("Health: ", health)
 
 func was_damaged_recently() -> bool:
 	return Time.get_ticks_msec() - _last_damage_time < 500
