@@ -94,6 +94,7 @@ func _is_tile_hit()->void:
 				if damage:
 					health -=damage
 				if heal:
+					collider.set_cell(cell_pos, -1)
 					health += heal
 
 class CharacterStateMachine extends StateMachine:
