@@ -69,7 +69,7 @@ func is_moving() -> bool:
 			and movement_speed > 0
 	)
 
-func _is_hit()->void:
+func _is_tile_hit()->void:
 	var last_collision = get_last_slide_collision()
 
 	if(last_collision is KinematicCollision2D):
