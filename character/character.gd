@@ -16,12 +16,27 @@ var visited_tile_cache: String
 
 var state_machine := CharacterStateMachine.new()
 var _is_jumping: bool
-
+var _last_damage_time: float = 0.0
+var _is_damaged: bool = false
+var _damage_timer: float = 0.0
+var _invincibility_duration: float = 0.5
 
 func _enter_tree() -> void:
 	if not state_machine.get_parent():
 		add_child(state_machine, true, Node.INTERNAL_MODE_FRONT)
 
+func _ready() -> void:
+	state_machine.set_process(true)
+	state_machine.set_physics_process(true)
+	state_machine._find_next_valid_state()
+
+func _process(delta: float) -> void:
+	# Handle damage timer in the character itself
+	if _is_damaged:
+		_damage_timer += delta
+		if _damage_timer >= _invincibility_duration:
+			_is_damaged = false
+			_damage_timer = 0.0
 
 func apply_gravity() -> void:
 	if not is_on_floor():
@@ -69,6 +84,34 @@ func is_moving() -> bool:
 			and movement_speed > 0
 	)
 
+func is_damaged() -> bool:
+	return _is_damaged
+
+func take_damage(amount: int) -> void:
+	if _is_damaged:
+		return  # Already in damage cooldown
+
+	health -= amount
+	_last_damage_time = Time.get_ticks_msec()
+	_is_damaged = true
+	_damage_timer = 0.0
+
+	# Ensure health doesn't go below 0
+	if health < 0:
+		health = 0
+
+	print("Health: ", health)
+
+func heal(amount: int) -> void:
+	health += amount
+	# Cap health at max (you can add a max_health variable)
+	if health > 100:
+		health = 100
+	print("Health: ", health)
+
+func was_damaged_recently() -> bool:
+	return Time.get_ticks_msec() - _last_damage_time < 500
+
 func _is_tile_hit()->void:
 	var last_collision = get_last_slide_collision()
 
@@ -90,16 +133,18 @@ func _is_tile_hit()->void:
 			var tile_data = collider.get_cell_tile_data(cell_pos)
 			if tile_data:
 				var damage: int = tile_data.get_custom_data("damage")
-				var heal: int = tile_data.get_custom_data("heal")
+				var heal_amount: int = tile_data.get_custom_data("heal")
 				if damage:
-					health -=damage
-				if heal:
+					take_damage(damage)
+				if heal_amount:
 					collider.set_cell(cell_pos, -1)
-					health += heal
+					heal(heal_amount)
 
 class CharacterStateMachine extends StateMachine:
 	func _register_states() -> Array[GDScript]:
 		return [
+			DamageState,
+			DeathState,
 			IdleState,
 			WalkState,
 			JumpState,
@@ -138,6 +183,8 @@ class CharacterStateMachine extends StateMachine:
 					character.is_on_floor()
 					and not character.is_moving()
 					and not character.is_jumping()
+					and not character.is_damaged()
+					and character.health > 0
 			)
 
 
@@ -157,6 +204,8 @@ class CharacterStateMachine extends StateMachine:
 					character.is_on_floor()
 					and character.is_moving()
 					and not character.is_jumping()
+					and not character.is_damaged()
+					and character.health > 0
 			)
 
 
@@ -173,11 +222,12 @@ class CharacterStateMachine extends StateMachine:
 					character.apply_movement()
 					character.set_jumping(false)
 
-
 		func _is_conditions() -> bool:
 			return (
 					character.is_on_floor()
 					and character.is_jumping()
+					and not character.is_damaged()
+					and character.health > 0
 			)
 
 
@@ -185,13 +235,65 @@ class CharacterStateMachine extends StateMachine:
 		func _to_string() -> String:
 			return "FallState"
 
-
 		func _notification(what: int) -> void:
 			match what:
 				NOTIFICATION_PHYSICS_PROCESS:
 					character.apply_gravity()
 					character.apply_movement()
 
+		func _is_conditions() -> bool:
+			return (
+					not character.is_on_floor()
+					and not character.is_damaged()
+					and character.health > 0
+			)
+
+	class DamageState extends CharacterState:
+		func _to_string() -> String:
+			return "DamageState"
+
+		func _notification(what: int) -> void:
+			match what:
+				NOTIFICATION_ENTER:
+					_play_damage_effects()
+
+				NOTIFICATION_PHYSICS_PROCESS:
+					character.apply_gravity()
+					character.apply_movement()
 
 		func _is_conditions() -> bool:
-			return not character.is_on_floor()
+			return character.is_damaged() and character.health > 0
+
+		func get_priority() -> int:
+			return 5
+
+		func _play_damage_effects() -> void:
+			var sprite = character.get_node_or_null("Sprite2D")
+			if sprite:
+				sprite.modulate = Color.RED
+				await character.get_tree().create_timer(0.1).timeout
+				sprite.modulate = Color.WHITE
+
+	class DeathState extends CharacterState:
+		func _to_string() -> String:
+			return "DeathState"
+
+		func _notification(what: int) -> void:
+			match what:
+				NOTIFICATION_ENTER:
+					character.set_physics_process(false)
+					character.set_process(false)
+					_play_death_effects()
+
+		func _is_conditions() -> bool:
+			return character.health <= 0
+
+		func get_priority() -> int:
+			return 10
+
+		func _play_death_effects() -> void:
+			var sprite = character.get_node_or_null("Sprite2D")
+			if sprite:
+				sprite.modulate = Color.GRAY
+			character.set_collision_layer_value(1, false)
+			character.set_collision_mask_value(1, false)
