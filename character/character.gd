@@ -11,6 +11,8 @@ extends CharacterBody2D
 @export var gravity_force: float = 980
 @export var gravity_direction: Vector2 = Vector2.DOWN:
 	set = set_gravity_direction
+@export var health:int = 100
+var visited_tile_cache: String
 
 var state_machine := CharacterStateMachine.new()
 var _is_jumping: bool
@@ -39,7 +41,7 @@ func apply_movement() -> void:
 	)
 	var gravity_component := velocity.project(gravity_direction)
 	velocity = gravity_component + movement_vector
-
+	_is_hit()
 
 func apply_jump_force() -> void:
 	velocity = (
@@ -67,6 +69,32 @@ func is_moving() -> bool:
 			and movement_speed > 0
 	)
 
+func _is_hit()->void:
+	var last_collision = get_last_slide_collision()
+
+	if(last_collision is KinematicCollision2D):
+		var collider = last_collision.get_collider() as TileMapLayer
+		var local_pos:Vector2 = collider.to_local(last_collision.get_position())
+		var cell_pos:Vector2i = collider.local_to_map(local_pos)
+
+		# Create unique ID for this tile
+		var source_id = collider.get_cell_source_id(cell_pos)
+		var atlas_coords = collider.get_cell_atlas_coords(cell_pos)
+		var alternative = collider.get_cell_alternative_tile(cell_pos)
+		var tile_unique_id = "%d_%d_%d_%d_%d_%d" % [source_id, atlas_coords.x, atlas_coords.y, alternative, cell_pos.x, cell_pos.y]
+
+		if visited_tile_cache != tile_unique_id:
+			# Add to cache
+			visited_tile_cache = tile_unique_id
+
+			var tile_data = collider.get_cell_tile_data(cell_pos)
+			if tile_data:
+				var damage: int = tile_data.get_custom_data("damage")
+				var heal: int = tile_data.get_custom_data("heal")
+				if damage:
+					health -=damage
+				if heal:
+					health += heal
 
 class CharacterStateMachine extends StateMachine:
 	func _register_states() -> Array[GDScript]:
