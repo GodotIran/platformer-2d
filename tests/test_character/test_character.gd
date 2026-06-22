@@ -143,7 +143,7 @@ func test_character_idle_to_walk() -> void:
 		),
 	).is_true()
 
-	character.movement_direction = 1
+	character.movement.direction = 1
 
 	await await_signal_on(
 		state_machine,

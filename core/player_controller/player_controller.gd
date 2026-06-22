@@ -23,7 +23,7 @@ func _enter_tree() -> void:
 
 
 func _unhandled_input(_event: InputEvent) -> void:
-	character.movement_direction = Input.get_axis(
+	character.movement.direction = Input.get_axis(
 		INPUT_MAP[Action.WALK_LEFT],
 		INPUT_MAP[Action.WALK_RIGHT],
 	)

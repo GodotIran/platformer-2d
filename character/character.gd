@@ -2,18 +2,33 @@ class_name Character
 extends CharacterBody2D
 
 @export_group("Movement", "movement_")
-@export var movement_speed: float = 150
-@export var movement_direction: float
-@export var movement_friction: float = 0.1
+@export var movement_speed: float = 350:
+	set = set_movement_speed
+@export var movement_friction: float = 0.1:
+	set = set_movement_friction
 @export_group("Jump", "jump_")
-@export var jump_force: float = 490
-@export_group("Gravity", "gravity_")
-@export var gravity_force: float = 980
-@export var gravity_direction: Vector2 = Vector2.DOWN:
-	set = set_gravity_direction
+@export var jump_force: float = 980:
+	set = set_jump_force
+@export_group("Weight", "weight_")
+@export var weight_mass: float = 2:
+	set = set_weight_mass
 
 var state_machine := CharacterStateMachine.new()
 var _is_jumping: bool
+
+@onready var movement := TraitServer.Movement.new(
+	self,
+	movement_speed,
+	movement_friction,
+)
+@onready var weight := TraitServer.Weight.new(
+	self,
+	weight_mass,
+)
+@onready var jump := TraitServer.Jump.new(
+	self,
+	jump_force,
+)
 
 
 func _enter_tree() -> void:
@@ -21,40 +36,8 @@ func _enter_tree() -> void:
 		add_child(state_machine, true, Node.INTERNAL_MODE_FRONT)
 
 
-func apply_gravity() -> void:
-	if not is_on_floor():
-		var delta := get_physics_process_delta_time()
-		velocity += gravity_direction * gravity_force * delta
-
-
-func apply_friction() -> void:
-	if is_on_floor():
-		velocity = velocity.lerp(Vector2.ZERO, movement_friction)
-
-
-func apply_movement() -> void:
-	var movement_vector := (
-			-gravity_direction.rotated(PI / 2) *
-			movement_direction * movement_speed
-	)
-	var gravity_component := velocity.project(gravity_direction)
-	velocity = gravity_component + movement_vector
-
-
-func apply_jump_force() -> void:
-	velocity = (
-			velocity.slide(gravity_direction) -
-			gravity_direction * jump_force
-	)
-
-
-func set_gravity_direction(value: Vector2) -> void:
-	gravity_direction = value.normalized()
-	up_direction = gravity_direction.rotated(PI).normalized()
-
-
-func set_jumping(jump: bool) -> void:
-	_is_jumping = jump
+func set_jumping(value: bool) -> void:
+	_is_jumping = value
 
 
 func is_jumping() -> bool:
@@ -63,9 +46,41 @@ func is_jumping() -> bool:
 
 func is_moving() -> bool:
 	return (
-			movement_direction != 0
-			and movement_speed > 0
+			movement.direction != 0
+			and movement.speed > 0
 	)
+
+
+func set_movement_speed(value: float) -> void:
+	movement_speed = value
+	if not is_node_ready():
+		await ready
+
+	movement.speed = movement_speed
+
+
+func set_movement_friction(value: float) -> void:
+	movement_friction = value
+	if not is_node_ready():
+		await ready
+
+	movement.friction = movement_friction
+
+
+func set_jump_force(value: float) -> void:
+	jump_force = value
+	if not is_node_ready():
+		await ready
+
+	jump.force = jump_force
+
+
+func set_weight_mass(value: float) -> void:
+	weight_mass = value
+	if not is_node_ready():
+		await ready
+
+	weight.mass = weight_mass
 
 
 class CharacterStateMachine extends StateMachine:
@@ -98,12 +113,6 @@ class CharacterStateMachine extends StateMachine:
 			return "IdleState"
 
 
-		func _notification(what: int) -> void:
-			match what:
-				NOTIFICATION_PHYSICS_PROCESS:
-					character.apply_friction()
-
-
 		func _is_conditions() -> bool:
 			return (
 					character.is_on_floor()
@@ -115,12 +124,6 @@ class CharacterStateMachine extends StateMachine:
 	class WalkState extends CharacterState:
 		func _to_string() -> String:
 			return "WalkState"
-
-
-		func _notification(what: int) -> void:
-			match what:
-				NOTIFICATION_PHYSICS_PROCESS:
-					character.apply_movement()
 
 
 		func _is_conditions() -> bool:
@@ -139,9 +142,8 @@ class CharacterStateMachine extends StateMachine:
 		func _notification(what: int) -> void:
 			match what:
 				NOTIFICATION_ENTER:
-					character.apply_jump_force()
+					character.jump.apply_force()
 				NOTIFICATION_PHYSICS_PROCESS:
-					character.apply_movement()
 					character.set_jumping(false)
 
 
@@ -155,13 +157,6 @@ class CharacterStateMachine extends StateMachine:
 	class FallState extends CharacterState:
 		func _to_string() -> String:
 			return "FallState"
-
-
-		func _notification(what: int) -> void:
-			match what:
-				NOTIFICATION_PHYSICS_PROCESS:
-					character.apply_gravity()
-					character.apply_movement()
 
 
 		func _is_conditions() -> bool:
