@@ -1,6 +1,5 @@
 extends GdUnitTestSuite
 
-
 func test_trait_server_auto_adds_to_root() -> void:
 	assert_that(TraitServer.get_singleton()).is_not_null()
 
