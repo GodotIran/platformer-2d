@@ -46,7 +46,7 @@ git checkout -b fix/player-crash
 بعد از اتمام کار:
 
 1. تغییرات را push کنید
-2. یک **Pull Request** به سمت شاخه `dev` در مخزن اصلی باز کنید
+2. یک **Pull Request** به سمت شاخه `master` در مخزن اصلی باز کنید
 3. در توضیحات PR حتماً Issue مربوطه را لینک دهید:
 
 ```
