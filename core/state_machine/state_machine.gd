@@ -111,7 +111,7 @@ func _set_state(value: BaseState) -> void:
 	var old: GDScript
 	var new: GDScript
 	if state:
-		state.notification(BaseState.NOTIFICATION_EXIT)
+		state.notification(BaseState.NOTIFICATION_EXIT, true)
 		state.set_active(false)
 		old = state.get_script()
 
