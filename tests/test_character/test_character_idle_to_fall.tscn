@@ -1,0 +1,38 @@
+[gd_scene format=4 uid="uid://dr2ev1gndcmkf"]
+
+[ext_resource type="TileSet" uid="uid://0sy4m6qiamx6" path="res://test_utils/prototype/test_tile_set.tres" id="1_42f8k"]
+[ext_resource type="Script" uid="uid://b5viylk3421ub" path="res://character/character.gd" id="2_r0v2y"]
+[ext_resource type="Texture2D" uid="uid://cg5b6vs548edx" path="res://test_utils/prototype/classic/tiles/coin_logo.png" id="3_el185"]
+[ext_resource type="PackedScene" uid="uid://ds4vo1c4fe8e" path="res://test_utils/test_destruction_area/test_destruction_area.tscn" id="4_lcrf1"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_utfqs"]
+radius = 48.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8edbq"]
+size = Vector2(150, 150)
+
+[node name="TestCharacterIdleToFall" type="Node2D" unique_id=1017098677]
+
+[node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=499260436]
+tile_map_data = PackedByteArray("AAD//wUAAQAEAAAAAAAAAAUAAQAEAAAAAAABAAUAAQAEAAAAAAACAAUAAQAEAAAAAAADAAUAAQAEAAAAAAAEAAUAAQAEAAAAAAAFAAUAAQAEAAAAAAAGAAUAAQAEAAAAAAAHAAUAAQAEAAAAAAAIAAUAAQAEAAAAAAAJAAUAAQAEAAAAAAAKAAUAAQAEAAAAAAACAAQAAQAEAAAAAAABAAQAAQAEAAAAAAAAAAQAAQAEAAAAAAD//wQAAQAEAAAAAAAHAAQAAQAEAAAAAAAIAAQAAQAEAAAAAAAJAAQAAQAEAAAAAAAKAAQAAQAEAAAAAAA=")
+tile_set = ExtResource("1_42f8k")
+
+[node name="Character" type="CharacterBody2D" parent="." unique_id=1693371763]
+position = Vector2(672, 48)
+script = ExtResource("2_r0v2y")
+metadata/_custom_type_script = "uid://b5viylk3421ub"
+
+[node name="Sprite2D" type="Sprite2D" parent="Character" unique_id=108918049]
+texture = ExtResource("3_el185")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Character" unique_id=2098981242]
+shape = SubResource("CircleShape2D_utfqs")
+
+[node name="TestDestructionArea" parent="." unique_id=880370641 node_paths=PackedStringArray("source", "target") instance=ExtResource("4_lcrf1")]
+position = Vector2(672, 576)
+source = NodePath("../Character")
+target = NodePath("../TileMapLayer")
+delay = 1.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TestDestructionArea" unique_id=504209530]
+shape = SubResource("RectangleShape2D_8edbq")

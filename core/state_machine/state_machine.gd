@@ -1,6 +1,8 @@
 class_name StateMachine
 extends Node
 
+signal state_changed(old: GDScript, new: GDScript)
+
 var state: BaseState:
 	set = _set_state
 var _states: Dictionary[GDScript, BaseState]
@@ -106,14 +108,20 @@ func _has_priority(state_a: BaseState, state_b: BaseState) -> bool:
 
 
 func _set_state(value: BaseState) -> void:
+	var old: GDScript
+	var new: GDScript
 	if state:
-		state.notification(BaseState.NOTIFICATION_EXIT)
+		state.notification(BaseState.NOTIFICATION_EXIT, true)
 		state.set_active(false)
+		old = state.get_script()
 
 	state = value
 	if state:
 		state.notification(BaseState.NOTIFICATION_ENTER)
 		state.set_active(true)
+		new = state.get_script()
+
+	state_changed.emit(old, new)
 
 
 func _register_states() -> Array[GDScript]:

@@ -1,0 +1,25 @@
+[gd_scene format=4 uid="uid://claoagn2dw3ro"]
+
+[ext_resource type="TileSet" uid="uid://0sy4m6qiamx6" path="res://test_utils/prototype/test_tile_set.tres" id="1_5gwvh"]
+[ext_resource type="Script" uid="uid://b5viylk3421ub" path="res://character/character.gd" id="2_o7syd"]
+[ext_resource type="Texture2D" uid="uid://cg5b6vs548edx" path="res://test_utils/prototype/classic/tiles/coin_logo.png" id="3_hkgr1"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_eecus"]
+radius = 48.0
+
+[node name="TestCharacterFallToIdle" type="Node2D" unique_id=767554596]
+
+[node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=1185554101]
+tile_map_data = PackedByteArray("AAD//wUAAQAEAAAAAAAAAAUAAQAEAAAAAAABAAUAAQAEAAAAAAACAAUAAQAEAAAAAAADAAUAAQAEAAAAAAAEAAUAAQAEAAAAAAAFAAUAAQAEAAAAAAAGAAUAAQAEAAAAAAAHAAUAAQAEAAAAAAAIAAUAAQAEAAAAAAAJAAUAAQAEAAAAAAAKAAUAAQAEAAAAAAACAAQAAQAEAAAAAAABAAQAAQAEAAAAAAAAAAQAAQAEAAAAAAD//wQAAQAEAAAAAAAHAAQAAQAEAAAAAAAIAAQAAQAEAAAAAAAJAAQAAQAEAAAAAAAKAAQAAQAEAAAAAAA=")
+tile_set = ExtResource("1_5gwvh")
+
+[node name="Character" type="CharacterBody2D" parent="." unique_id=401384580]
+position = Vector2(672, 48)
+script = ExtResource("2_o7syd")
+metadata/_custom_type_script = "uid://b5viylk3421ub"
+
+[node name="Sprite2D" type="Sprite2D" parent="Character" unique_id=4821802]
+texture = ExtResource("3_hkgr1")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Character" unique_id=1766288933]
+shape = SubResource("CircleShape2D_eecus")
